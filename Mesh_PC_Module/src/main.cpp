@@ -83,14 +83,12 @@ void receiveSerialData()
 			String receivedMessage;
 			for (int i = m_MsgStart + 1; i != m_MsgEnd; i++)
 			{
-				Serial.print(m_SerialBuffer[i]);
 				receivedMessage += m_SerialBuffer[i];
 				if (i == SERIAL_BUFFER_LENGTH) // Loop around
 				{
 					i = 0;
 				}
 			}
-			Serial.print('\n');
 			HandleSerialMessage(receivedMessage);
 
 			m_MsgStart = -1;
@@ -108,11 +106,12 @@ void receiveSerialData()
 void newConnectionCallback(uint32_t nodeId)
 {
 	Serial.printf(MESSAGE_FORMAT, nodeId, "connect");
+	m_Mesh.sendSingle(nodeId, "connect");
 }
 
 void changedConnectionCallback()
 {
-	// Serial.printf("Changed connections\n");
+
 }
 
 void droppedConnectionCallback(uint32_t nodeId)
@@ -129,8 +128,9 @@ void setup()
 {
 	Serial.begin(115200);
 
-	// mesh.setDebugMsgTypes( ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE ); // all types on
-	m_Mesh.setDebugMsgTypes(ERROR | STARTUP); // set before init() so that you can see startup messages
+	// mesh.setDebugMsgTypes( ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE );
+	//m_Mesh.setDebugMsgTypes(ERROR | STARTUP);
+	m_Mesh.setDebugMsgTypes( 0 ); //No debug logging: serial is used for pc communication
 
 	m_Mesh.init(MESH_PREFIX, MESH_PASSWORD, &m_Scheduler, MESH_PORT);
 	m_Mesh.onReceive(&receivedCallback);
@@ -138,6 +138,8 @@ void setup()
 	m_Mesh.onChangedConnections(&changedConnectionCallback);
 	m_Mesh.onDroppedConnection(&droppedConnectionCallback);
 	m_Mesh.onNodeTimeAdjusted(&nodeTimeAdjustedCallback);
+
+	Serial.println("Ready");
 }
 
 void loop()
