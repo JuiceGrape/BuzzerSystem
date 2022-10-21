@@ -23,6 +23,8 @@ namespace Buzzer_Windows_App
         BuzzerSerialConnection moduleConnection;
         MessageDecoder decoder;
         SettingsContainer settingsContainer;
+        ControllerSettingsContainer controllerSettings;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,14 +33,14 @@ namespace Buzzer_Windows_App
 
             decoder = new MessageDecoder();
             decoder.OnButtonPressed += Decoder_OnButtonPressed;
-            decoder.OnConnectionDetected += Decoder_OnConnectionDetected;
+            
 
             settingsContainer = SettingsContainer.GetSettingsContainer(SettingsContainer.DEFAULT_FILE_NAME);
-        }
+            controllerSettings = new ControllerSettingsContainer(moduleConnection);
+            decoder.OnConnectionDetected += controllerSettings.OnConnectionDetected;
 
-        private void Decoder_OnConnectionDetected(object sender, uint e)
-        {
-
+            if (settingsContainer.ConnectOnBoot)
+                moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
         }
 
         private void Decoder_OnButtonPressed(object sender, uint e)
@@ -48,7 +50,7 @@ namespace Buzzer_Windows_App
 
         private void ModuleConnection_OnMessageReceived(object sender, string message)
         {
-
+            decoder.DecodeMessage(message);
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
@@ -69,7 +71,9 @@ namespace Buzzer_Windows_App
 
         private void ConfigureControllers_Click(object sender, RoutedEventArgs e)
         {
-
+            moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
+            ControllerSettings controllerWindow = new ControllerSettings(controllerSettings);
+            controllerWindow.ShowDialog();
         }
     }
 }

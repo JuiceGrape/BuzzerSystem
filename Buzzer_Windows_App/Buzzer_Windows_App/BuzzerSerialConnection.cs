@@ -8,7 +8,7 @@ using System.IO.Ports;
 
 namespace Buzzer_Windows_App
 {
-    class BuzzerSerialConnection
+    public class BuzzerSerialConnection
     {
         public const char START_CHAR = '#';
         public const char END_CHAR = '$';
@@ -25,15 +25,16 @@ namespace Buzzer_Windows_App
 
         public BuzzerSerialConnection()
         {
-                   
+            Port = new SerialPort();
         }
 
         public void Start(string comport, int baudRate)
         {
-            if (Port != null && Port.IsOpen)
+            if (Port.IsOpen)
                 return;
 
-            Port = new SerialPort(comport, baudRate);
+            Port.PortName = comport;
+            Port.BaudRate = baudRate;
             Port.DataReceived += Port_DataReceived;
             Port.Open();
         }
@@ -100,6 +101,12 @@ namespace Buzzer_Windows_App
             fullMessage.Append(command);
             fullMessage.Append(END_CHAR);
             SendString(fullMessage.ToString());
+        }
+
+        public void SetLed(bool on, UInt32 target)
+        {
+            string message = on ? "led_high" : "led_low";
+            SendMessage(target, message);
         }
     }
 }

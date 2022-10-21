@@ -53,7 +53,7 @@ void HandleSerialMessage(const String& message)
 			second += message[i];
 		}
 	}
-
+	//#2222541329:led_high$
 	if (first.equals("command"))
 	{
 		if (second.equals("getConnected"))
@@ -70,7 +70,8 @@ void HandleSerialMessage(const String& message)
 	}
 	else
 	{
-		uint32_t targetID = first.toInt();
+		uint32_t targetID = strtoul(first.c_str(), NULL, 0);
+		Serial.printf("%u and %s\n", targetID, second);
 		m_Mesh.sendSingle(targetID, second);
 	}
 	

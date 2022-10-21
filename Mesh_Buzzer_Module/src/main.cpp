@@ -11,7 +11,7 @@
 #define MESSAGE_FORMAT "#%u:%s$"
 
 #define BUTTON_PIN 19
-#define LED_PIN 32
+#define LED_PIN GPIO_NUM_32
 
 Scheduler m_Scheduler;
 painlessMesh m_Mesh;
@@ -53,10 +53,12 @@ void HandleMessage(String& message)
 	{
 		digitalWrite(LED_PIN, LOW);
 	}
+	
 }
 
 void receivedCallback(uint32_t from, String &msg)
 {
+	Serial.println("Got message");
 	if (!m_InitReceived && msg.equals("connect")) //TODO: Broadcast connect request message instead of depending on connection request from server. Maybe state behaviour?
 	{
 		m_MainNode = from;
@@ -65,8 +67,10 @@ void receivedCallback(uint32_t from, String &msg)
 	}
 	else
 	{
+		Serial.println("else");
 		HandleMessage(msg);
 	}
+	Serial.println(msg);
 }
 
 void newConnectionCallback(uint32_t nodeId)
@@ -108,7 +112,7 @@ void setup()
 
 	pinMode(BUTTON_PIN, INPUT_PULLDOWN);
 	pinMode(LED_PIN, OUTPUT);
-	digitalWrite(LED_PIN, LOW);
+	digitalWrite(LED_PIN, HIGH);
 }
 
 void loop()
