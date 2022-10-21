@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "painlessMesh.h"
+#include <set>
 
 #define MESH_PREFIX "whateverYouLike"
 #define MESH_PASSWORD "somethingSneaky"
@@ -21,13 +22,15 @@ int m_bufferReadLocation = 0;
 int m_MsgStart = -1; // Negative for invalid value
 int m_MsgEnd = -1;	 // Negative for invalid value
 
+std::set<uint32_t> connectedDevices;
+
 // Needed for painless library
 void receivedCallback(uint32_t from, String &msg)
 {
 	Serial.printf(MESSAGE_FORMAT, from, msg.c_str());
 }
 
-void HandleSerialMessage(String message)
+void HandleSerialMessage(const String& message)
 {
 	String first;
 	String second;
@@ -51,8 +54,26 @@ void HandleSerialMessage(String message)
 		}
 	}
 
-	uint32_t targetID = first.toInt();
-	m_Mesh.sendSingle(targetID, second);
+	if (first.equals("command"))
+	{
+		if (second.equals("getConnected"))
+		{
+			for (const auto& val : connectedDevices)
+			{
+				Serial.printf(MESSAGE_FORMAT, val, "connect");
+			}
+		}
+		else if (second.equals("test"))
+		{
+			Serial.printf(MESSAGE_FORMAT, 420, "69");
+		}
+	}
+	else
+	{
+		uint32_t targetID = first.toInt();
+		m_Mesh.sendSingle(targetID, second);
+	}
+	
 }
 
 void receiveSerialData()
@@ -105,6 +126,7 @@ void receiveSerialData()
 
 void newConnectionCallback(uint32_t nodeId)
 {
+	connectedDevices.insert(nodeId);
 	Serial.printf(MESSAGE_FORMAT, nodeId, "connect");
 	m_Mesh.sendSingle(nodeId, "connect");
 }
@@ -116,7 +138,7 @@ void changedConnectionCallback()
 
 void droppedConnectionCallback(uint32_t nodeId)
 {
-	// Serial.printf("Dropped connection %s\n", nodeId);
+	connectedDevices.erase(nodeId);
 }
 
 void nodeTimeAdjustedCallback(int32_t offset)

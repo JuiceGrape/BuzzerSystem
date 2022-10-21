@@ -57,7 +57,7 @@ void HandleMessage(String& message)
 
 void receivedCallback(uint32_t from, String &msg)
 {
-	if (!m_InitReceived && msg.equals("connect"))
+	if (!m_InitReceived && msg.equals("connect")) //TODO: Broadcast connect request message instead of depending on connection request from server. Maybe state behaviour?
 	{
 		m_MainNode = from;
 		m_InitReceived = true;
