@@ -15,7 +15,7 @@ Scheduler m_Scheduler;
 painlessMesh m_Mesh;
 
 #define SERIAL_BUFFER_LENGTH 256
-char m_SerialBuffer[SERIAL_BUFFER_LENGTH];
+char m_SerialBuffer[SERIAL_BUFFER_LENGTH + 1];
 int m_BufferWriteLocation = 0;
 int m_bufferReadLocation = 0;
 
@@ -23,11 +23,24 @@ int m_MsgStart = -1; // Negative for invalid value
 int m_MsgEnd = -1;	 // Negative for invalid value
 
 std::set<uint32_t> connectedDevices;
+#define LED_PIN 22
 
 // Needed for painless library
 void receivedCallback(uint32_t from, String &msg)
 {
 	Serial.printf(MESSAGE_FORMAT, from, msg.c_str());
+}
+
+void HandleMessage(String& message)
+{
+	if (message.equals("led_high"))
+	{
+		digitalWrite(LED_PIN, LOW);
+	}
+	else if (message.equals("led_low"))
+	{
+		digitalWrite(LED_PIN, HIGH);
+	}
 }
 
 void HandleSerialMessage(const String& message)
@@ -72,6 +85,7 @@ void HandleSerialMessage(const String& message)
 	{
 		uint32_t targetID = strtoul(first.c_str(), NULL, 0);
 		Serial.printf("%u and %s\n", targetID, second);
+		HandleMessage(second);
 		m_Mesh.sendSingle(targetID, second);
 	}
 	
@@ -100,16 +114,16 @@ void receiveSerialData()
 			m_MsgEnd = m_bufferReadLocation;
 		}
 
-		if (m_MsgStart != -1 && m_MsgEnd != -1 && m_MsgStart < m_MsgEnd) // Message found, processing
+		if (m_MsgStart != -1 && m_MsgEnd != -1) // Message found, processing
 		{
 			String receivedMessage;
 			for (int i = m_MsgStart + 1; i != m_MsgEnd; i++)
 			{
-				receivedMessage += m_SerialBuffer[i];
 				if (i == SERIAL_BUFFER_LENGTH) // Loop around
 				{
 					i = 0;
 				}
+				receivedMessage += m_SerialBuffer[i];
 			}
 			HandleSerialMessage(receivedMessage);
 
@@ -161,6 +175,12 @@ void setup()
 	m_Mesh.onChangedConnections(&changedConnectionCallback);
 	m_Mesh.onDroppedConnection(&droppedConnectionCallback);
 	m_Mesh.onNodeTimeAdjusted(&nodeTimeAdjustedCallback);
+
+	pinMode(LED_PIN, OUTPUT);
+	delay(5);
+	digitalWrite(LED_PIN, LOW);
+
+	m_SerialBuffer[SERIAL_BUFFER_LENGTH] = '\0';
 
 	Serial.println("Ready");
 }

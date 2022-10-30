@@ -38,9 +38,10 @@ namespace Buzzer_Windows_App
             settingsContainer = SettingsContainer.GetSettingsContainer(SettingsContainer.DEFAULT_FILE_NAME);
             controllerSettings = new ControllerSettingsContainer(moduleConnection);
             decoder.OnConnectionDetected += controllerSettings.OnConnectionDetected;
+            decoder.OnButtonPressed += Decoder_OnButtonPressed;
 
-            if (settingsContainer.ConnectOnBoot)
-                moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
+            //if (settingsContainer.ConnectOnBoot)
+            //    moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
         }
 
         private void Decoder_OnButtonPressed(object sender, uint e)

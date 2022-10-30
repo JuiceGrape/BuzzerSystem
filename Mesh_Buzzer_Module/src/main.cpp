@@ -11,7 +11,7 @@
 #define MESSAGE_FORMAT "#%u:%s$"
 
 #define BUTTON_PIN 19
-#define LED_PIN GPIO_NUM_32
+#define LED_PIN 22
 
 Scheduler m_Scheduler;
 painlessMesh m_Mesh;
@@ -47,13 +47,12 @@ void HandleMessage(String& message)
 {
 	if (message.equals("led_high"))
 	{
-		digitalWrite(LED_PIN, HIGH);
+		digitalWrite(LED_PIN, LOW);
 	}
 	else if (message.equals("led_low"))
 	{
-		digitalWrite(LED_PIN, LOW);
+		digitalWrite(LED_PIN, HIGH);
 	}
-	
 }
 
 void receivedCallback(uint32_t from, String &msg)
@@ -112,7 +111,8 @@ void setup()
 
 	pinMode(BUTTON_PIN, INPUT_PULLDOWN);
 	pinMode(LED_PIN, OUTPUT);
-	digitalWrite(LED_PIN, HIGH);
+	delay(5);
+	digitalWrite(LED_PIN, LOW);
 }
 
 void loop()
