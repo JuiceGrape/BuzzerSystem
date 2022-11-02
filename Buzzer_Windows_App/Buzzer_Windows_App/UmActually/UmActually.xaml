@@ -1,0 +1,40 @@
+﻿<Window x:Class="Buzzer_Windows_App.UmActually"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Buzzer_Windows_App"
+        mc:Ignorable="d"
+        Title="UmActually" Height="1080" Width="1920"
+        WindowStyle="None"
+        WindowState="Maximized"
+        KeyDown="OnKeyDown">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BuzzedColour" Color="Yellow" />
+    </Window.Resources>
+    
+    <Grid Background="#FF444444">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Image Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Source="yellow.jpg"/>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="0" Content="Player 1" x:Name="PlayerName1" FontFamily="Segoe Script"/>
+        <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="0" Content="0" x:Name="PlayerScore1" FontFamily="Segoe Script"/>
+
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="1" Content="Player 2" x:Name="PlayerName2" FontFamily="Segoe Script"/>
+        <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="1" Content="0" x:Name="PlayerScore2" FontFamily="Segoe Script"/>
+
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="2" Content="Player 3" x:Name="PlayerName3" FontFamily="Segoe Script"/>
+        <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="2" Content="0" x:Name="PlayerScore3" FontFamily="Segoe Script"/>
+    </Grid>
+</Window>

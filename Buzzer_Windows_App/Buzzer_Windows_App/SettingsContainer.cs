@@ -32,5 +32,8 @@ namespace Buzzer_Windows_App
         public int BaudRate { get; set; }
         public string ComPort { get; set; }
         public bool ConnectOnBoot { get; set; }
+
+        public string BuzzerSound { get; set; }
+        public string ScoreSound { get; set; }
     }
 }

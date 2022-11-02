@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Buzzer_Windows_App
 {
-    class MessageDecoder
+    public class MessageDecoder
     {
         public const string CONNECT_COMMAND = "connect";
         public const string BUTTON_COMMAND = "press";

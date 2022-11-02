@@ -20,12 +20,12 @@
             <MenuItem x:Name="SettingsButton" Header="Settings" Height="15" VerticalAlignment="Top" Click="Settings_Click"/>
             <MenuItem x:Name="ConfigureControllersButton" Header="Configure Buzzers" Click="ConfigureControllers_Click"/>
         </ToolBar>
-        <Button x:Name="Um_Actually"  Margin="10,10,10,10" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Background="Black">
-            <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="Assets/um_actually.png" Stretch="UniformToFill" />
+        <Button x:Name="Um_Actually"  Margin="10,10,10,10" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Background="Black" Click="Um_Actually_Click">
+            <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="Assets/GameshowImages/um_actually.png" Stretch="UniformToFill" />
         </Button>
 
-        <Button x:Name="Jeopardy"  Margin="10,10,10,10" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="1" Background="Black">
-            <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="Assets/jeperdy.jpg" Stretch="UniformToFill" />
+        <Button x:Name="Jeopardy"  Margin="10,10,10,10" Grid.ColumnSpan="1" Grid.RowSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="1" Background="Black" Click="Jeopardy_Click">
+            <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="Assets/GameshowImages/jeperdy.jpg" Stretch="UniformToFill" />
         </Button>
     </Grid>
 </Window>

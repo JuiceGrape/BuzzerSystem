@@ -28,6 +28,14 @@ namespace Buzzer_Windows_App
             Port = new SerialPort();
         }
 
+        ~BuzzerSerialConnection()
+        {
+            if (Port != null)
+            {
+                Port.Close();
+            }
+        }
+
         public void Start(string comport, int baudRate)
         {
             if (Port.IsOpen)
@@ -62,14 +70,6 @@ namespace Buzzer_Windows_App
                         receivedMessage.Append(byteRead);
                     }
                 }
-            }
-        }
-
-        ~BuzzerSerialConnection()
-        {
-            if (Port != null && Port.IsOpen)
-            {
-                Port.Close();
             }
         }
 

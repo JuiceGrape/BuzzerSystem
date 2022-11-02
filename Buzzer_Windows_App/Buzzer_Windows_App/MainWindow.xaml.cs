@@ -32,8 +32,6 @@ namespace Buzzer_Windows_App
             moduleConnection.OnMessageReceived += ModuleConnection_OnMessageReceived;
 
             decoder = new MessageDecoder();
-            decoder.OnButtonPressed += Decoder_OnButtonPressed;
-            
 
             settingsContainer = SettingsContainer.GetSettingsContainer(SettingsContainer.DEFAULT_FILE_NAME);
             controllerSettings = new ControllerSettingsContainer(moduleConnection);
@@ -41,11 +39,6 @@ namespace Buzzer_Windows_App
 
             //if (settingsContainer.ConnectOnBoot)
             //    moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
-        }
-
-        private void Decoder_OnButtonPressed(object sender, uint e)
-        {
-
         }
 
         private void ModuleConnection_OnMessageReceived(object sender, string message)
@@ -74,6 +67,18 @@ namespace Buzzer_Windows_App
             moduleConnection.Start(settingsContainer.ComPort, settingsContainer.BaudRate);
             ControllerSettings controllerWindow = new ControllerSettings(controllerSettings);
             controllerWindow.ShowDialog();
+        }
+
+        private void Jeopardy_Click(object sender, RoutedEventArgs e)
+        {
+            BasicScoring gameWindow = new BasicScoring(controllerSettings, decoder, settingsContainer);
+            gameWindow.ShowDialog();
+        }
+
+        private void Um_Actually_Click(object sender, RoutedEventArgs e)
+        {
+            UmActually gameWindow = new UmActually(controllerSettings, decoder, settingsContainer);
+            gameWindow.ShowDialog();
         }
     }
 }
