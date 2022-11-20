@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO.Ports;
 
+using System.IO;
+
 namespace Buzzer_Windows_App
 {
     public class BuzzerSerialConnection
@@ -22,10 +24,13 @@ namespace Buzzer_Windows_App
         StringBuilder receivedMessage = new StringBuilder();
         bool isBuilding = false;
 
+        StreamWriter debugger;
+
 
         public BuzzerSerialConnection()
         {
             Port = new SerialPort();
+            debugger = File.AppendText("debug.txt");
         }
 
         ~BuzzerSerialConnection()
@@ -49,10 +54,11 @@ namespace Buzzer_Windows_App
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            
             while (Port.BytesToRead > 0)
             {
                 char byteRead = (char)Port.ReadChar();
-
+                debugger.Write(byteRead);
                 if (byteRead == START_CHAR)
                 {
                     isBuilding = true;
@@ -71,6 +77,7 @@ namespace Buzzer_Windows_App
                     }
                 }
             }
+            debugger.Flush();
         }
 
         private void SendString(string message)

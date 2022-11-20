@@ -27,6 +27,7 @@ namespace Buzzer_Windows_App
         PlayerContainer[] players;
 
         bool HasBuzzed = false;
+        uint BuzzedPlayer = 0;
 
         public UmActually(ControllerSettingsContainer controllers, MessageDecoder decoder, SettingsContainer settings)
         {
@@ -59,6 +60,7 @@ namespace Buzzer_Windows_App
                         player.SetBuzzer(new SolidColorBrush(Color.FromRgb(0, 255, 0)));
                         HasBuzzed = true;
                         m_controllers.connection.SetLed(true, e);
+                        BuzzedPlayer = e;
                         Settings.PlaySound(m_settings.BuzzerSound);
                         return;
                     }
@@ -76,16 +78,18 @@ namespace Buzzer_Windows_App
 
         private void Reset()
         {
+            if (!HasBuzzed)
+                return;
             this.Dispatcher.Invoke(() =>
             {
                 foreach (var player in players)
                 {
                     player.SetBuzzer(new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)));
-                    m_controllers.connection.SetLed(false, player.GetID());
                 }
-                HasBuzzed = false;
+                
             });
-            
+            HasBuzzed = false;
+            m_controllers.connection.SendMessage(BuzzedPlayer, "led_low");
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

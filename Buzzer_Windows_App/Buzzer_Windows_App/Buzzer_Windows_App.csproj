@@ -195,14 +195,16 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="UmActually\yellow.jpg" />
-    <Resource Include="UmActually\damn.jpg" />
     <Content Include="Assets\SoundEffects\short_pling.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\SoundEffects\short_bell.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="UmActually\669.jpg" />
+    <Resource Include="UmActually\background.jpg" />
+    <Resource Include="UmActually\umactuallylogo.png" />
+    <Resource Include="UmActually\um_actually.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />

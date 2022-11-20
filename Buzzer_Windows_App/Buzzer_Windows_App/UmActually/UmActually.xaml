@@ -27,14 +27,17 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         
-        <Image Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Source="yellow.jpg"/>
-        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="0" Content="Player 1" x:Name="PlayerName1" FontFamily="Segoe Script"/>
+        
+        <Image Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Source="669.jpg"/>
+
+        <Image Grid.ColumnSpan="3" Grid.RowSpan="1" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Source="umactuallylogo.png"/>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="0" Content="Player 1" x:Name="PlayerName1" FontFamily="Segoe Script" FontWeight="Bold"/>
         <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="0" Content="0" x:Name="PlayerScore1" FontFamily="Segoe Script"/>
 
-        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="1" Content="Player 2" x:Name="PlayerName2" FontFamily="Segoe Script"/>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="1" Content="Player 2" x:Name="PlayerName2" FontFamily="Segoe Script" FontWeight="Bold"/>
         <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="1" Content="0" x:Name="PlayerScore2" FontFamily="Segoe Script"/>
 
-        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="2" Content="Player 3" x:Name="PlayerName3" FontFamily="Segoe Script"/>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="1" Grid.Column="2" Content="Player 3" x:Name="PlayerName3" FontFamily="Segoe Script" FontWeight="Bold"/>
         <Button Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10, 10, 10, 10" FontSize="80"  Grid.Row="2" Grid.Column="2" Content="0" x:Name="PlayerScore3" FontFamily="Segoe Script"/>
     </Grid>
 </Window>
