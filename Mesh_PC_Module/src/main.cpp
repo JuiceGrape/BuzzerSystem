@@ -44,7 +44,7 @@ void HandleSerialMessage(const String& message)
 	String first;
 	String second;
 	bool delimReached = false;
-
+	//Serial.println(message);
 	for (int i = 0; i < message.length(); i++)
 	{
 		if (message[i] == DELIM_CHAR)
@@ -109,6 +109,12 @@ void receiveSerialData()
 			m_MsgEnd = m_bufferReadLocation;
 		}
 
+		m_bufferReadLocation++;
+		if (m_bufferReadLocation == SERIAL_BUFFER_LENGTH) // Loop around
+		{
+			m_bufferReadLocation = 0;
+		}
+
 		if (m_MsgStart != -1 && m_MsgEnd != -1) // Message found, processing
 		{
 			String receivedMessage;
@@ -124,15 +130,14 @@ void receiveSerialData()
 
 			m_MsgStart = -1;
 			m_MsgEnd = -1;
+			break;
 		}
 
-		m_bufferReadLocation++;
-		if (m_bufferReadLocation == SERIAL_BUFFER_LENGTH) // Loop around
-		{
-			m_bufferReadLocation = 0;
-		}
+		
 	}
 }
+
+Task taskReceiveSerialData( TASK_MILLISECOND * 100 , TASK_FOREVER, &receiveSerialData );
 
 void newConnectionCallback(uint32_t nodeId)
 {
@@ -170,11 +175,13 @@ void setup()
 	m_Mesh.onDroppedConnection(&droppedConnectionCallback);
 	m_Mesh.onNodeTimeAdjusted(&nodeTimeAdjustedCallback);
 
+	m_Scheduler.addTask(taskReceiveSerialData);
+
 	pinMode(BUILTIN_LED, OUTPUT);
 	digitalWrite(BUILTIN_LED, LOW);
 
 	m_SerialBuffer[SERIAL_BUFFER_LENGTH] = '\0';
-
+	taskReceiveSerialData.enable();
 	Serial.println("Ready");
 }
 
@@ -182,5 +189,5 @@ void loop()
 {
 	// it will run the user scheduler as well
 	m_Mesh.update();
-	receiveSerialData();
+	//receiveSerialData();
 }
