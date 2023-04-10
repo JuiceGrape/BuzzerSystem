@@ -12,7 +12,7 @@ namespace Buzzer_Windows_App
 {
     public struct PlayerController
     {
-        public UInt32 ID;
+        public UInt64 ID;
         public string Name;
     }
 
@@ -20,18 +20,18 @@ namespace Buzzer_Windows_App
     {
         public PlayerController[] players;
 
-        public List<UInt32> ConnectedDevices;
+        public List<UInt64> ConnectedDevices;
 
         public BuzzerSerialConnection connection;
 
         public ControllerSettingsContainer(BuzzerSerialConnection buzzerConnection)
         {
             players = new PlayerController[3];
-            ConnectedDevices = new List<UInt32>();
+            ConnectedDevices = new List<UInt64>();
             connection = buzzerConnection;
         }
 
-        public void OnConnectionDetected(object sender, UInt32 e)
+        public void OnConnectionDetected(object sender, UInt64 e)
         {
             if (!ConnectedDevices.Contains(e))
             {

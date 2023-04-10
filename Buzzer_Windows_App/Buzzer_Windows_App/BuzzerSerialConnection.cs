@@ -88,7 +88,7 @@ namespace Buzzer_Windows_App
             }
         }
 
-        public void SendMessage(UInt32 target, string message)
+        public void SendMessage(UInt64 target, string message)
         {
             StringBuilder fullMessage = new StringBuilder();
             fullMessage.Append(START_CHAR);
@@ -110,7 +110,7 @@ namespace Buzzer_Windows_App
             SendString(fullMessage.ToString());
         }
 
-        public void SetLed(bool on, UInt32 target)
+        public void SetLed(bool on, UInt64 target)
         {
             string message = on ? "led_high" : "led_low";
             SendMessage(target, message);

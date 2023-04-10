@@ -45,15 +45,15 @@ namespace Buzzer_Windows_App
         public void OnExit(object sender, EventArgs e)
         {
             controllerContainer.players[0].Name = Player1Name.Text;
-            controllerContainer.players[0].ID = Convert.ToUInt32(Player1Box.SelectedItem);
+            controllerContainer.players[0].ID = Convert.ToUInt64(Player1Box.SelectedItem);
 
             controllerContainer.players[1].Name = Player2Name.Text;
-            controllerContainer.players[1].ID = Convert.ToUInt32(Player2Box.SelectedItem);
+            controllerContainer.players[1].ID = Convert.ToUInt64(Player2Box.SelectedItem);
 
             controllerContainer.players[2].Name = Player3Name.Text;
-            controllerContainer.players[2].ID = Convert.ToUInt32(Player3Box.SelectedItem);
+            controllerContainer.players[2].ID = Convert.ToUInt64(Player3Box.SelectedItem);
 
-            foreach (UInt32 val in controllerContainer.ConnectedDevices)
+            foreach (UInt64 val in controllerContainer.ConnectedDevices)
             {
                 controllerContainer.connection.SetLed(false, val);
             }
@@ -65,7 +65,7 @@ namespace Buzzer_Windows_App
             Player2Box.Items.Clear();
             Player3Box.Items.Clear();
 
-            foreach (UInt32 val in controllerContainer.ConnectedDevices)
+            foreach (UInt64 val in controllerContainer.ConnectedDevices)
             {
                 Player1Box.Items.Add(val);
                 Player2Box.Items.Add(val);
@@ -87,7 +87,7 @@ namespace Buzzer_Windows_App
                 return;
             
             Led1 = !Led1;
-            controllerContainer.connection.SetLed(Led1, Convert.ToUInt32(Player1Box.SelectedItem));
+            controllerContainer.connection.SetLed(Led1, Convert.ToUInt64(Player1Box.SelectedItem));
             
         }
 
@@ -99,7 +99,7 @@ namespace Buzzer_Windows_App
                 return;
 
             Led2 = !Led2;
-            controllerContainer.connection.SetLed(Led2, Convert.ToUInt32(Player2Box.SelectedItem));
+            controllerContainer.connection.SetLed(Led2, Convert.ToUInt64(Player2Box.SelectedItem));
             
         }
 
@@ -110,7 +110,7 @@ namespace Buzzer_Windows_App
                 return;
 
             Led3 = !Led3;
-            controllerContainer.connection.SetLed(Led3, Convert.ToUInt32(Player3Box.SelectedItem));
+            controllerContainer.connection.SetLed(Led3, Convert.ToUInt64(Player3Box.SelectedItem));
             
         }
     }

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <vector>
+#include <map>
 #include <esp_now.h>
 #include <esp_wifi.h>
 #include <WiFi.h>
@@ -7,7 +7,7 @@
 #define START_CHAR '#'
 #define END_CHAR '$'
 #define DELIM_CHAR ':'
-#define MESSAGE_FORMAT "#%u:%s$"
+#define MESSAGE_FORMAT "#%llu:%s$"
 #define SERIAL_BUFFER_LENGTH 256
 
 char m_SerialBuffer[SERIAL_BUFFER_LENGTH + 1];
@@ -18,13 +18,22 @@ int m_MsgStart = -1; // Negative for invalid value
 int m_MsgEnd = -1;	 // Negative for invalid value
 
 uint8_t mac[6] {0xDE, 0xAD, 0xBE, 0xEF, 0x12, 0x53};
+std::map<uint64_t, esp_now_peer_info*> connectedDevices;
 
-
-std::vector<esp_now_peer_info> connectedDevices;
 
 bool m_LedOn = false;
 
 #define LED_BUILTIN 2
+
+void SendMessage(esp_now_peer_info* peer, String message)
+{
+	esp_now_send(peer->peer_addr, (uint8_t*)message.c_str(), message.length());
+}
+
+void SendMessage(uint64_t UID, String message)
+{
+	SendMessage(connectedDevices[UID], message);
+}
 
 void SetLed(bool LedOn)
 {
@@ -38,6 +47,13 @@ void SetLed(bool LedOn)
 		digitalWrite(LED_BUILTIN, HIGH);
 		m_LedOn = false;
 	}
+}
+
+uint64_t macToInt(const uint8_t* mac)
+{
+	uint64_t retVal = 0;
+	memcpy(&retVal, mac, 6);
+	return retVal;
 }
 
 void BlinkLed()
@@ -73,20 +89,16 @@ void HandleSerialMessage(const String& message)
 	{
 		if (second.equals("getConnected"))
 		{
-			// for (const auto& val : connectedDevices)
-			// {
-			// 	Serial.printf(MESSAGE_FORMAT, val, "connect");
-			// }
-		}
-		else if (second.equals("test"))
-		{
-			Serial.printf(MESSAGE_FORMAT, 420, "69");
+			for (const auto& val : connectedDevices)
+			{
+				Serial.printf(MESSAGE_FORMAT, val.first, "connect");
+			}
 		}
 	}
 	else
 	{
-		// uint32_t targetID = strtoul(first.c_str(), NULL, 0);
-		// m_Mesh.sendSingle(targetID, second);
+		uint64_t targetID = strtoull(first.c_str(), NULL, 0);
+		SendMessage(targetID, second);
 	}
 }
 
@@ -152,57 +164,49 @@ void receiveSerialData()
 	}
 }
 
-void AddMac(const uint8_t * mac)
+void AddMac(const uint8_t* mac)
 {
-	int indexToDelete = -1;
-	for (const auto& val : connectedDevices)
+	auto UID = macToInt(mac);
+	if (connectedDevices.find(UID) != connectedDevices.end())
 	{
-		bool match = true;
-		for (int i = 0; i < 6; i++)
+		if (esp_now_del_peer(mac) != ESP_OK)
 		{
-			if (val.peer_addr[i] != mac[i])
-			{
-				match = false;
-				break;
-			}
+			Serial.println("Couldn't delete mac address");
 		}
+
+		delete connectedDevices[UID];
+		connectedDevices.erase(UID);
 	}
 
-	connectedDevices.push_back(esp_now_peer_info());
-	
-	connectedDevices.insert(mac);
-	Serial.printf(MESSAGE_FORMAT, from, "connect");
-	m_Mesh.sendSingle(from, "connect");
+	auto peerInfo = new esp_now_peer_info();
+	memcpy(peerInfo->peer_addr, mac, 6);
+	peerInfo->channel = 0;
+	peerInfo->encrypt = false;
+
+	if (esp_now_add_peer(peerInfo) != ESP_OK)
+	{
+		Serial.println("Failed to add peer");
+		delete peerInfo;
+		return;
+  	}
+
+	SendMessage(peerInfo, "pair_complete");
+	connectedDevices.insert({UID, peerInfo});
 }
 
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) 
+{
 	String message((char*)incomingData, len);
-	Serial.println(message);
 
 	if (message.equals("pair"))
 	{
-		
+		AddMac(mac);
 	}
 	else
 	{
-		Serial.printf(MESSAGE_FORMAT, from, msg.c_str());
+		Serial.printf(MESSAGE_FORMAT, macToInt(mac), message);
 	}
 }
-
-// void receivedCallback(uint32_t from, String &msg)
-// {
-// 	if (msg.equals("pair"))
-// 	{
-// 		connectedDevices.insert(from);
-// 		Serial.printf(MESSAGE_FORMAT, from, "connect");
-// 		m_Mesh.sendSingle(from, "connect");
-// 	}
-// 	else
-// 	{
-// 		Serial.printf(MESSAGE_FORMAT, from, msg.c_str());
-// 	}
-	
-// }
 
 void setup()
 {
@@ -223,25 +227,10 @@ void setup()
 
 	esp_now_register_recv_cb(OnDataRecv);
 
-	// esp_now_peer_info peer;
-	// memcpy(peer.peer_addr, mac, 6);
-	// peer.channel = 0;
-	// peer.encrypt = false;
-
-	// if (esp_now_add_peer(&peer) != ESP_OK)
-	// {
-	// 	Serial.println("Failed to add peer");
-	// 	return;
-  	// }
-	
 	Serial.println("Ready");
 }
 
 void loop()
 {
-	// String message("TestMessage");
-	// // receiveSerialData();
-
-	// delay(5000);
-	// esp_now_send(mac, (uint8_t*)message.c_str(), message.length());
+	receiveSerialData();
 }

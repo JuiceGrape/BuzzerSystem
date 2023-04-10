@@ -45,7 +45,7 @@ namespace Buzzer_Windows_App
 
         }
 
-        private void M_decoder_OnButtonPressed(object sender, uint e)
+        private void M_decoder_OnButtonPressed(object sender, UInt64 e)
         {
             if (HasBuzzed)
                 return;
@@ -136,7 +136,7 @@ namespace Buzzer_Windows_App
                 m_score.MouseRightButtonDown -= DecreaseScore;
             }
 
-            public uint GetID()
+            public UInt64 GetID()
             {
                 return m_player.ID;
             }

@@ -11,8 +11,8 @@ namespace Buzzer_Windows_App
         public const string CONNECT_COMMAND = "connect";
         public const string BUTTON_COMMAND = "press";
 
-        public event EventHandler<UInt32> OnButtonPressed;
-        public event EventHandler<UInt32> OnConnectionDetected;
+        public event EventHandler<UInt64> OnButtonPressed;
+        public event EventHandler<UInt64> OnConnectionDetected;
 
         public void DecodeMessage(string message)
         {
@@ -20,7 +20,7 @@ namespace Buzzer_Windows_App
             if (splitMessage.Length != 2)
                 return;
 
-            UInt32 source = UInt32.Parse(splitMessage[0]);
+            UInt64 source = UInt64.Parse(splitMessage[0]);
             string command = splitMessage[1];
 
             switch(command)

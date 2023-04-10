@@ -53,7 +53,8 @@ void HandleButton(int pin)
 		if (digitalRead(pin) > 0)
 		{
 			m_ButtonPressed = true;
-			//m_Mesh.sendSingle(m_MainNode, "press");
+			Serial.println("Button pressed");
+			SendMessage("press");
 		}
 	}
 	else
@@ -77,26 +78,21 @@ void HandleMessage(String& message)
 	}
 }
 
-void receivedCallback(uint32_t from, String &msg)
+void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) 
 {
-	if (!m_InitReceived) //TODO: Broadcast connect request message instead of depending on connection request from server. Maybe state behaviour?
+	String message((char*)incomingData, len);
+	Serial.println(message);
+
+	if (message.equals("pair_complete"))
 	{
-		if (msg.equals("connect"))
-		{
-			m_MainNode = from;
-			m_InitReceived = true;
-			Serial.printf("Initialized with %u", m_MainNode);
-			SetLed(false);
-		}	
+		Serial.println("Pairing done");
+		m_InitReceived = true;
+		SetLed(false);
 	}
 	else
 	{
-		if (from == m_MainNode)
-		{
-			HandleMessage(msg);
-		}
+		HandleMessage(message);
 	}
-	Serial.println(msg);
 }
 
 void setup()
@@ -116,6 +112,8 @@ void setup()
 		return;
 	}
 
+	esp_now_register_recv_cb(OnDataRecv);
+
 	memcpy(mainBoard.peer_addr, targetMac, 6);
 	mainBoard.channel = 0;
 	mainBoard.encrypt = false;
@@ -127,11 +125,15 @@ void setup()
   	}
 }
 
-String testMessage("I like boobies");
-
 void loop()
 {
+	if (!m_InitReceived)
+	{
+		SendMessage("pair");
+		SetLed(!m_LedOn);
+		sleep(2);
+		return;
+	}
+
 	HandleButton(BUTTON_PIN);
-	sleep(2);
-	SetLed(!m_LedOn);
 }
